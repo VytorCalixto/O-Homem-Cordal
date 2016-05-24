@@ -17,6 +17,7 @@ typedef struct vertice{
     unsigned int grau; // Para grafos não-direcionados
     unsigned int grau_ent; // Entrada dos direcionados
     unsigned int grau_sai; // Saída dos direcionados
+    char* rotulo;
 
     lista arestas;
 };
@@ -84,6 +85,7 @@ grafo le_grafo(FILE *input){
         v->grau_ent = (unsigned int) agdegree(g, n, TRUE, FALSE);
         v->grau_sai = (unsigned int) agdegree(g, n, FALSE, TRUE);
         v->arestas = constroi_lista();
+        v->rotulo = "";
         insere_lista(v, gf->vertices);
     }
 
@@ -331,6 +333,29 @@ int simplicial(vertice v, grafo g){
     lista l = vizinhanca(v,(direcionado(g) ? 1 : 0),g);
     return (clique(l,g));
 }
+
+//------------------------------------------------------------------------------
+// devolve uma lista de vertices com a ordem dos vértices dada por uma
+// busca em largura lexicográfica
+
+lista busca_largura_lexicografica(grafo g) {
+    return constroi_lista();
+}
+
+//------------------------------------------------------------------------------
+// devolve 1, se a lista l representa uma
+//            ordem perfeita de eliminação para o grafo g ou
+//         0, caso contrário
+//
+// o tempo de execução é O(|V(G)|+|E(G)|)
+
+int ordem_perfeita_eliminacao(lista l, grafo g) {
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+// devolve 1, se g é um grafo cordal ou
+//         0, caso contrário
 
 int cordal(grafo g){
     int eh_cordal = 1;
