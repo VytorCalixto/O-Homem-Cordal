@@ -1,0 +1,5 @@
+strict digraph "c" {
+	a -> b ["peso"=5]
+	b -> c ["peso"=7]
+	b -> d ["peso"=2]
+}

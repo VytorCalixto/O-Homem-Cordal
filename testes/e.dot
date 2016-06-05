@@ -1,0 +1,5 @@
+strict digraph "asd" {
+	a -> b
+	b -> c
+	c -> a
+}

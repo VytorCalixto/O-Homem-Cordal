@@ -1,0 +1,7 @@
+strict graph "wasd" {
+	a -- b
+	b -- c
+	c -- d
+	d -- a
+	a -- c
+}
