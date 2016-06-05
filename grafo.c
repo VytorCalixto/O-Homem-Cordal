@@ -5,6 +5,11 @@
 #include "grafo.h"
 #include "lista.h"
 
+typedef struct rotulo{
+    int tamanho;
+    int* rtl;
+} *rotulo;
+
 typedef struct grafo {
     int direcionado;
     int ponderado;
@@ -17,7 +22,7 @@ typedef struct vertice{
     unsigned int grau; // Para grafos não-direcionados
     unsigned int grau_ent; // Entrada dos direcionados
     unsigned int grau_sai; // Saída dos direcionados
-    char* rotulo;
+    rotulo rtl;
 
     lista arestas;
 };
@@ -26,6 +31,54 @@ typedef struct aresta{
     long int peso;
     vertice *destino;
 } *aresta;
+
+rotulo constroi_rotulo() {
+    rotulo r = malloc(sizeof(struct rotulo));
+    r->tamanho = 0;
+    r->rtl = calloc(1, sizeof(int));
+    return r;
+}
+
+void insere_rotulo(rotulo r, int n) {
+    r->rtl = realloc(r->rtl, sizeof(int)*r->tamanho+1);
+    r->rtl[r->tamanho] = n;
+    ++r->tamanho;
+}
+
+void destroi_rotulo(rotulo r) {
+    free(r->rtl);
+    free(r);
+}
+
+// Retorna 1 se a > b, 0 caso contrário
+int compara_rotulo(rotulo a, rotulo b) {
+    if(a->tamanho = 0) return 0;
+    if(b->tamanho = 0) return 1;
+    int min = (a->tamanho < b->tamanho) ? a->tamanho : b->tamanho;
+    int i = 0;
+    while(i < min) {
+        if(a->rtl[i] > b->rtl[i]) return 1;
+        if(a->rtl[i] < b->rtl[i]) return 0;
+        if(a->rtl[i] == b->rtl[i]) ++i;
+    }
+    //Em caso de empate, retorna o menor rótulo
+    return (a->tamanho < b->tamanho) ? a->tamanho : b->tamanho;
+}
+
+vertice maior_rotulo(lista l) {
+    no n = primeiro_no(l);
+    vertice v = (vertice) conteudo(n);
+    vertice maior = v;
+    n = proximo_no(n);
+    while(n) {
+        vertice w = (vertice) conteudo(n);
+        if(!compara_rotulo(v->rtl, w->rtl)) {
+            maior = w;
+        }
+        n = proximo_no(n);
+    }
+    return maior;
+}
 
 char *nome_vertice(vertice v){
     return v->nome;
@@ -85,7 +138,7 @@ grafo le_grafo(FILE *input){
         v->grau_ent = (unsigned int) agdegree(g, n, TRUE, FALSE);
         v->grau_sai = (unsigned int) agdegree(g, n, FALSE, TRUE);
         v->arestas = constroi_lista();
-        v->rotulo = "";
+        v->rtl = constroi_rotulo();
         insere_lista(v, gf->vertices);
     }
 
@@ -339,6 +392,14 @@ int simplicial(vertice v, grafo g){
 // busca em largura lexicográfica
 
 lista busca_largura_lexicografica(grafo g) {
+    lista busca = constroi_lista();
+    grafo h = copia_grafo(g);
+    no n = primeiro_no(h->vertices);
+    vertice v = (vertice) conteudo(n);
+    insere_rotulo(v->rtl, tamanho_lista(h->vertices));
+    insere_lista(v, busca);
+    //TODO: pegar o vizinho com maior rótulo para ser o próximo
+
     return constroi_lista();
 }
 
