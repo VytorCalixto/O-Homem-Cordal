@@ -76,9 +76,9 @@ no maior_rotulo(lista l) {
             break;
         }
     }
-    // if(!n) {
-    //     return NULL;
-    // }
+    if(!n) {
+        return NULL;
+    }
     printf("primeiro: %s rótulo:", nome_vertice((vertice) conteudo(n)));
     for(int j=0; j < ((vertice) conteudo(n))->rtl->tamanho; ++j) {
         printf("%d\t", ((vertice) conteudo(n))->rtl->rtl[j]);
@@ -420,38 +420,23 @@ int simplicial(vertice v, grafo g){
 
 lista busca_largura_lexicografica(grafo g) {
     lista busca = constroi_lista();
-    grafo h = copia_grafo(g);
-    no n = primeiro_no(h->vertices);
+    no n = primeiro_no(g->vertices);
     vertice v = (vertice) conteudo(n);
-    insere_rotulo(v->rtl, tamanho_lista(h->vertices));
-    int i = tamanho_lista(h->vertices);
+    insere_rotulo(v->rtl, tamanho_lista(g->vertices));
+    int i = tamanho_lista(g->vertices);
 
-    puts("");
     while(i > 0) {
-        puts("-----------");
-        printf("v: %s rótulo:", nome_vertice(v));
-        for(int j=0; j < v->rtl->tamanho; ++j) {
-            printf("%d\t", v->rtl->rtl[j]);
-        }
-        puts("");
-        lista vizinhos = vizinhanca(v, 0, h);
-        escreve_grafo(stdout,h);
-        puts("Vizinhos");
+        lista vizinhos = vizinhanca(v, 0, g);
         for(no m = primeiro_no(vizinhos); m; m = proximo_no(m)) {
             vertice w = (vertice) conteudo(m);
-            printf("w: %s visitado: %d rótulo:", nome_vertice(w), w->visitado);
             insere_rotulo(w->rtl, i-1);
-            for(int j=0; j < w->rtl->tamanho; ++j) {
-                printf("%d\t", w->rtl->rtl[j]);
-            }
-            puts("");
         }
         v->visitado=1;
         insere_lista(v, busca);
-        n = maior_rotulo(h->vertices);
-        // if(!n) {
-        //     break;
-        // }
+        n = maior_rotulo(g->vertices);
+        if(!n) {
+            break;
+        }
         v = (vertice) conteudo(n);
         --i;
     }
